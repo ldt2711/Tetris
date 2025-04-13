@@ -12,6 +12,8 @@ public class Mino implements IMino{
     public int direction = 1; // 4 direction (1,2,3,4)
     boolean leftCollision, rightCollision, bottomCollision;
     public boolean active = true;
+    public boolean deactivating; // the tetromino hits the floor and can still move
+    int deactivateCounter = 0; // counting for deactivating method
 
     public Block[] getB() {
         return b;
@@ -57,6 +59,9 @@ public class Mino implements IMino{
         rightCollision = false;
         bottomCollision = false;
 
+        // check staticBlocks collision
+        checkStaticBlockCollision();
+
         // check frame collision
         // left wall
         for (Block block : b) {
@@ -85,6 +90,9 @@ public class Mino implements IMino{
         rightCollision = false;
         bottomCollision = false;
 
+        // check staticBlocks collision
+        checkStaticBlockCollision();
+
         // check frame collision use tempB because it stores the rotation values
         // left wall
         for (Block block : tempB) {
@@ -105,7 +113,37 @@ public class Mino implements IMino{
             }
         }
     }
+
+    public void checkStaticBlockCollision() {
+        for (Block item1: PlayManager.staticBlocks) {
+            int targetX = item1.getCorX();
+            int targetY = item1.getCorY();
+
+            // check down
+            for (Block item2: b) {
+                if (item2.getCorX() == targetX && item2.getCorY() + Block.SIZE == targetY) {
+                    bottomCollision = true;
+                }
+            }
+            // check left
+            for (Block item2: b) {
+                if (item2.getCorX() - Block.SIZE == targetX && item2.getCorY() == targetY) {
+                    leftCollision = true;
+                }
+            }
+            for (Block item2: b) {
+                if (item2.getCorX() + Block.SIZE == targetX && item2.getCorY() == targetY) {
+                    rightCollision = true;
+                }
+            }
+        }
+    }
+
     public void update() {
+        if (deactivating) {
+            deactivating();
+        }
+
         // move the mino
         if(KeyHandler.upPressed) {
             switch (direction) {
@@ -129,7 +167,7 @@ public class Mino implements IMino{
 
         if(KeyHandler.downPressed) {
             // if the mino's bottom is not hitting, it can go down
-            if (!leftCollision) {
+            if (!bottomCollision) {
                 b[0].setY(b[0].getCorY() + Block.SIZE);
                 b[1].setY(b[1].getCorY() + Block.SIZE);
                 b[2].setY(b[2].getCorY() + Block.SIZE);
@@ -159,7 +197,7 @@ public class Mino implements IMino{
         }
         // stop the tetromino when it hits the bottom floor
         if (bottomCollision) {
-            active = false;
+            deactivating = true;
         }
         else {
             autoDropCounter++; // the counter increase every frame until it equals dropInterval
@@ -172,6 +210,22 @@ public class Mino implements IMino{
             }
         }
     }
+
+    public void deactivating() {
+        deactivateCounter++;
+
+        // wait 45 frames until deactivate
+        if (deactivateCounter == 45) {
+            deactivateCounter = 0;
+            checkMovementCollision(); // check if the bottom is still hitting
+
+            // if the bottom is still hitting after 45 frames, deactivate the mino
+            if (bottomCollision) {
+                active = false;
+            }
+        }
+    }
+
     public void draw(Graphics2D g2) {
         int margin = 2;
 

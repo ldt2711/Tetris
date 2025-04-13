@@ -9,14 +9,14 @@ public class Mino_Bar extends Mino{
 
     public void setXY(int x, int y) {
         // .    .   .   .
-        //         b[0]
+        //     b[0]
         getB()[0].setX(x);
         getB()[0].setY(y);
-        getB()[1].setX(x + Block.SIZE);
+        getB()[1].setX(x - Block.SIZE);
         getB()[1].setY(y);
-        getB()[2].setX(x - Block.SIZE);
+        getB()[2].setX(x + Block.SIZE);
         getB()[2].setY(y);
-        getB()[3].setX(x - 2 * Block.SIZE);
+        getB()[3].setX(x + 2 * Block.SIZE);
         getB()[3].setY(y);
     }
 
