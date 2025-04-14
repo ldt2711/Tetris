@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements Runnable { // for gameThread
 
     public void update() { // score, position,...
         // update only when the game is not paused
-        if(!KeyHandler.pausePressed) {
+        if(!KeyHandler.pausePressed && !pm.gameOver) {
             pm.update();
             this.setBackground(Color.black);
         }
