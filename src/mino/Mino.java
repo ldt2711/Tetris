@@ -8,6 +8,7 @@ import java.awt.*;
 public class Mino implements IMino{
     private Block[] b = new Block[4]; // every tetromino has 4 blocks
     private Block[] tempB = new Block[4]; // use when rotate and the tetromino touches the wall
+    private Block[] ghostB = new Block[4]; // for ghost block
     int autoDropCounter = 0;
     public int direction = 1; // 4 direction (1,2,3,4)
     boolean leftCollision, rightCollision, bottomCollision;
@@ -32,6 +33,10 @@ public class Mino implements IMino{
         tempB[1] = new Block(c);
         tempB[2] = new Block(c);
         tempB[3] = new Block(c);
+        ghostB[0] = new Block(c);
+        ghostB[1] = new Block(c);
+        ghostB[2] = new Block(c);
+        ghostB[3] = new Block(c);
     }
 
     public void setXY(int x, int y) {}
@@ -195,6 +200,26 @@ public class Mino implements IMino{
             }
             KeyHandler.leftPressed = false;
         }
+
+        updateGhostBlock();
+
+        if (KeyHandler.spacePressed) {
+            while (true) {
+                checkMovementCollision();
+                // move the mino till it hits the floor
+                if (!bottomCollision) {
+                    b[0].setY(b[0].getCorY() + Block.SIZE);
+                    b[1].setY(b[1].getCorY() + Block.SIZE);
+                    b[2].setY(b[2].getCorY() + Block.SIZE);
+                    b[3].setY(b[3].getCorY() + Block.SIZE);
+                } else {
+                    active = false;
+                    break;
+                }
+            }
+            KeyHandler.spacePressed = false;
+        }
+
         // stop the tetromino when it hits the bottom floor
         if (bottomCollision) {
             deactivating = true;
@@ -207,6 +232,42 @@ public class Mino implements IMino{
                 b[2].setY(b[2].getCorY() + Block.SIZE);
                 b[3].setY(b[3].getCorY() + Block.SIZE);
                 autoDropCounter = 0;
+            }
+        }
+
+    }
+
+    public void updateGhostBlock() {
+        // copy position
+        for (int i = 0; i < 4; i++) {
+            ghostB[i].setX(b[i].getCorX());
+            ghostB[i].setY(b[i].getCorY());
+        }
+
+        // move down until hit the floor
+        while (true) {
+            boolean isHit = false;
+            for (Block gb: ghostB) {
+                int nextY = gb.getCorY() + Block.SIZE;
+                if (nextY == PlayManager.bottom_y) {
+                    isHit = true;
+                    break;
+                }
+
+                // check static block
+                for (Block sb: PlayManager.staticBlocks) {
+                    if (sb.getCorX() == gb.getCorX() && sb.getCorY() == nextY) {
+                        isHit = true;
+                        break;
+                    }
+                }
+                if (isHit) break;
+            }
+            if (isHit) break;
+
+            // move ghost blocks down
+            for (Block gb: ghostB) {
+                gb.setY(gb.getCorY() + Block.SIZE);
             }
         }
     }
@@ -228,12 +289,22 @@ public class Mino implements IMino{
 
     public void draw(Graphics2D g2) {
         int margin = 2;
-
+        // draw all the blocks of tetromino
         g2.setColor(b[0].getC());
-        g2.fillRect(b[0].getCorX() + margin, b[0].getCorY() + margin, Block.SIZE - (margin * 2), Block.SIZE - (margin * 2));
-        g2.fillRect(b[1].getCorX() + margin, b[1].getCorY() + margin, Block.SIZE - (margin * 2), Block.SIZE - (margin * 2));
-        g2.fillRect(b[2].getCorX() + margin, b[2].getCorY() + margin, Block.SIZE - (margin * 2), Block.SIZE - (margin * 2));
-        g2.fillRect(b[3].getCorX() + margin, b[3].getCorY() + margin, Block.SIZE - (margin * 2), Block.SIZE - (margin * 2));
+        for (Block bl : b) {
+            g2.fillRect(bl.getCorX() + margin, bl.getCorY() + margin, Block.SIZE - (margin * 2), Block.SIZE - (margin * 2));
+        }
+
+        // draw ghost blocks
+        g2.setColor(new Color(b[0].getC().getRed(), b[0].getC().getGreen(), b[0].getC().getBlue(), 50));
+        // g2.setColor(new Color(200, 200, 200, 120));
+        // g2.setStroke(new BasicStroke(2)); // set the stroke for the ghost block
+        for (Block gb : ghostB) {
+            if (gb.getCorX() >= PlayManager.left_x && gb.getCorY() >= 0) {
+                g2.fillRect(gb.getCorX() + margin, gb.getCorY() + margin, Block.SIZE - (margin * 2), Block.SIZE - (margin * 2));
+            }
+        }
+
     }
 
 }

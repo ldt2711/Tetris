@@ -57,7 +57,7 @@ public class GamePanel extends JPanel implements Runnable { // for gameThread
             this.setBackground(Color.black);
         }
         else {
-            this.setBackground(Color.darkGray);
+            this.setBackground(new Color(23, 23, 23, 20));
         }
     }
 

@@ -48,8 +48,8 @@ public class PlayManager {
         MINO_START_X = left_x + (WIDTH/2) - Block.SIZE;
         MINO_START_Y = top_y + Block.SIZE;
 
-        NEXTMINO_X = right_x + 175;
-        NEXTMINO_Y = top_y + 500;
+        NEXTMINO_X = right_x + 180;
+        NEXTMINO_Y = top_y + 510;
 
         // set the starting mino
         currentMino = pickMino();
@@ -182,9 +182,9 @@ public class PlayManager {
         int x = right_x + 100;
         int y = bottom_y - 200;
         g2.drawRect(x, y, 200, 200);
-        g2.setFont(new Font("Arial", Font.PLAIN, 30));
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON); // anti-aliasing for the text
-        g2.drawString("Tiếp theo", x + 40, y + 60);
+        g2.setFont(new Font("Monospaced", Font.BOLD, 24));
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF); // anti-aliasing for the text
+        g2.drawString("NEXT", x + 75, y + 50);
 
         // draw score frame
         g2.drawRect(x, top_y, 250, 300);
@@ -192,12 +192,12 @@ public class PlayManager {
         y = top_y + 90;
         g2.drawString("LEVEL: " + level, x, y); y += 70;
         g2.drawString("LINES: " + lines, x, y); y += 70;
-        g2.drawString("ĐIỂM: " + score, x, y);
+        g2.drawString("SCORES: " + score, x, y);
 
         // draw the currentMino
         try {
             currentMino.draw(g2);
-        } catch (NullPointerException _) {}
+        } catch (NullPointerException e) {throw new NullPointerException();}
 
         // draw the next mino
         nextMino.draw(g2);
@@ -227,21 +227,21 @@ public class PlayManager {
         g2.setColor(Color.yellow);
         g2.setFont(g2.getFont().deriveFont(50f));
         if (gameOver) {
-            x = left_x + 25;
+            x = left_x + 40;
             y = top_y + 320;
             g2.drawString("GAME OVER", x, y);
         }
         else if(KeyHandler.pausePressed) {
-            x = left_x + 50;
+            x = left_x + 90;
             y = top_y + 320;
-            g2.drawString("TẠM DỪNG", x, y);
+            g2.drawString("PAUSED", x, y);
         }
 
         // draw the game title
         x = 75;
         y = top_y + 320;
         g2.setColor(Color.white);
-        g2.setFont(new Font("Times New Roman", Font.PLAIN, 60));
+        g2.setFont(new Font("Monospaced", Font.BOLD, 60));
         g2.drawString("Tetris", x, y);
     }
 }
