@@ -4,6 +4,9 @@ import model.mino.*;
 import view.GamePanel;
 import view.PlayArea;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class MinoGenerator {
@@ -14,6 +17,8 @@ public class MinoGenerator {
     Mino nextMino;
     public final int NEXT_MINO_X;
     public final int NEXT_MINO_Y;
+
+    List<Mino> minoBag = new ArrayList<>(); // random 7-bag algorithm
 
     public MinoGenerator() {
         MINO_START_X = GamePanel.left_x + (PlayArea.WIDTH/2) - Block.SIZE;
@@ -43,20 +48,24 @@ public class MinoGenerator {
         this.nextMino = nextMino;
     }
 
+    private void refillBag() {
+        minoBag.clear();
+        minoBag.add(new Mino_LL());
+        minoBag.add(new Mino_LR());
+        minoBag.add(new Mino_ZL());
+        minoBag.add(new Mino_ZR());
+        minoBag.add(new Mino_T());
+        minoBag.add(new Mino_Sqare());
+        minoBag.add(new Mino_Bar());
+
+        Collections.shuffle(minoBag); // shuffle the bag
+    }
+
     public Mino pickMino() {
         // pick a random mino
-        Mino mino = null;
-        int i = new Random().nextInt(7);
-        mino = switch (i) {
-            case 0 -> new Mino_LL();
-            case 1 -> new Mino_LR();
-            case 2 -> new Mino_T();
-            case 3 -> new Mino_Bar();
-            case 4 -> new Mino_Sqare();
-            case 5 -> new Mino_ZR();
-            case 6 -> new Mino_ZL();
-            default -> mino;
-        };
-        return mino;
+        if(minoBag.isEmpty()) {
+            refillBag();
+        }
+        return minoBag.removeFirst(); // get and remove first tetromino in bag
     }
 }

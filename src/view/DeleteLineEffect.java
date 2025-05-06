@@ -13,17 +13,22 @@ public class DeleteLineEffect {
         if (effectCounterOn) {
             effectCounter++;
 
-            for (Integer i : effectY) {
-                float ratio = effectCounter / 10f;
-                Color fadeColor = new Color(1.0f, 1.0f - ratio, 1.0f - ratio);
+            for (Integer y : effectY) {
+                // Alpha dao động để tạo hiệu ứng nhấp nháy
+                float alpha = (float) Math.abs(Math.sin(Math.PI * effectCounter / 10)); // từ 0 -> 1 -> 0
 
-                g2.setColor(fadeColor);
-                g2.fillRect(left_x, i, WIDTH, Block.SIZE);
+                // Vẽ lớp mờ trắng nhấp nháy lên các block
+                Composite oldComposite = g2.getComposite();
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+
+                g2.setColor(Color.WHITE);
+                g2.fillRect(left_x, y, WIDTH, Block.SIZE);
+
+                g2.setComposite(oldComposite); // phục hồi lại transparency gốc
             }
             // reset after 10 frame
             if (effectCounter == 10) {
                 effectCounter = 0;
-                effectY.clear();
                 return false;
             }
             else return true;

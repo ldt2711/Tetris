@@ -16,10 +16,11 @@ public class DrawMino {
     }
 
     public void drawGhostBlocks(Graphics2D g2, Mino m) {
-        g2.setColor(new Color(m.getB()[0].getC().getRed(), m.getB()[0].getC().getGreen(), m.getB()[0].getC().getBlue(), 50));
+        g2.setColor(new Color(m.getB()[0].getC().getRed(), m.getB()[0].getC().getGreen(), m.getB()[0].getC().getBlue()));
+        g2.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Block gb : m.getGhostB()) {
             if (gb.getCorX() >= GamePanel.left_x && gb.getCorY() >= 0) {
-                g2.fillRect(gb.getCorX() + margin, gb.getCorY() + margin, Block.SIZE - (margin * 2), Block.SIZE - (margin * 2));
+                g2.drawRect(gb.getCorX() + margin, gb.getCorY() + margin, Block.SIZE - (margin * 2), Block.SIZE - (margin * 2));
             }
         }
     }

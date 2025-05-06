@@ -13,8 +13,8 @@ public class PlayManager {
     public boolean gameOver;
 
     // effect
-    boolean effectCounterOn;
-    int effectCounter;
+    private boolean effectCounterOn;
+    private int shakeCounter = 0;
     ArrayList<Integer> effectY = new ArrayList<>();
     // model
     MinoGenerator mg;
@@ -46,8 +46,8 @@ public class PlayManager {
         return effectCounterOn;
     }
 
-    public int getEffectCounter() {
-        return effectCounter;
+    public int getShakeCounter() {
+        return shakeCounter;
     }
 
     public ArrayList<Integer> getEffectY() {
@@ -66,7 +66,12 @@ public class PlayManager {
         this.effectCounterOn = effectCounterOn;
     }
 
+    public void setShakeCounter(int shakeCounter) {
+        this.shakeCounter = shakeCounter;
+    }
+
     public void update() {
+        if (effectCounterOn) return;
         // check if the current mino is active
         if (!mg.getCurrentMino().active) {
             // if the mino is not active, put it into staticBlocks
@@ -102,60 +107,69 @@ public class PlayManager {
         int x = GamePanel.left_x;
         int y = GamePanel.top_y;
         int blockCount = 0;
-        int lineCount = 0;
 
-        while (x < GamePanel.right_x && y < GamePanel.bottom_y) {
+        while (y < GamePanel.bottom_y) {
             for (Block item: GameState.staticBlocks) {
-                if (x == item.getCorX() && y == item.getCorY()) {
+                if (y == item.getCorY()) {
                     // increase the count if there is a static block
                     blockCount++;
                 }
             }
 
             // stop condition
-            x += Block.SIZE;
-            if (x == GamePanel.right_x) {
+
                 // if the count equal 12 that means current y line is filled with blocks so we can delete them
                 if (blockCount == 12) {
-                    effectCounterOn = true;
                     effectY.add(y); // use array because can delete many lines
-                    // use backward for loop to avoid some weird results from the normal for loop
-                    for (int i = GameState.staticBlocks.size() - 1; i > -1; i--) {
-                        // remove all the blocks in the current y line
-                        if (GameState.staticBlocks.get(i).getCorY() == y) {
-                            GameState.staticBlocks.remove(i);
-                        }
-                    }
 
-                    lineCount++;
-                    sm.gs.setLines(sm.gs.getLines()+1); // increase when delete a line
-                    // drop speed
-                    // increase drop speed when the score hits a certain number
-                    // max speed is 1
-                    if (sm.gs.getLines() % 10 == 0 && dropInterval > 1) { // increase the level when 10 lines are deleted
-                        sm.gs.setLevel(sm.gs.getLevel()+1);
-                        if (dropInterval > 10) { // dropInterval start is 60 = 60 frames
-                            dropInterval -= 10;
-                        }
-                        else {
-                            dropInterval -= 1;
-                        }
-                    }
-
-                    // slide down blocks that are above the deleted line
-                    for (Block staticBlock : GameState.staticBlocks) {
-                        // if a block is above deleted line, move it down by the block size
-                        if (staticBlock.getCorY() < y) {
-                            staticBlock.setY(staticBlock.getCorY() + Block.SIZE);
-                        }
-                    }
                 }
                 // reset the count when go to the next row
                 blockCount = 0;
-                x = GamePanel.left_x;
                 y += Block.SIZE;
+            if (!effectY.isEmpty()) {
+                effectCounterOn = true;
             }
         }
+    }
+
+    public void finalizeDelete() {
+        int lineCount = 0;
+        shakeCounter = 5;
+        for (Integer y: effectY) {
+            // use backward for loop to avoid some weird results from the normal for loop
+            for (int i = GameState.staticBlocks.size() - 1; i > -1; i--) {
+                // remove all the blocks in the current y line
+                if (GameState.staticBlocks.get(i).getCorY() == y) {
+                    GameState.staticBlocks.remove(i);
+                }
+            }
+
+            // slide down blocks that are above the deleted line
+            for (Block staticBlock : GameState.staticBlocks) {
+                // if a block is above deleted line, move it down by the block size
+                if (staticBlock.getCorY() < y) {
+                    staticBlock.setY(staticBlock.getCorY() + Block.SIZE);
+                }
+            }
+            lineCount++;
+        }
+
+        sm.gs.setLines(sm.gs.getLines() + lineCount); // increase when delete a line
         sm.calculateScore(sm.gs.getLevel(), lineCount);
+
+        // drop speed
+        // increase drop speed when the score hits a certain number
+        // max speed is 1
+        if (sm.gs.getLines() / 10 > sm.gs.getLevel() - 1 && dropInterval > 1) { // increase the level when 10 lines are deleted
+            sm.gs.setLevel(sm.gs.getLevel() + 1);
+            if (dropInterval > 10) { // dropInterval start is 60 = 60 frames
+                dropInterval -= 10;
+            } else {
+                dropInterval -= 1;
+            }
+        }
+
+        effectY.clear();
+        effectCounterOn = false;
     }
 }

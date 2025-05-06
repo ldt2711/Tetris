@@ -37,7 +37,9 @@ public class GamePanel extends JPanel { // for gameThread
     public void update() { // score, position,...
         // update only when the game is not paused
         if(!KeyHandler.pausePressed && !pm.gameOver) {
-            pm.update();
+            if (!pm.isEffectCounterOn()) {
+                pm.update();
+            }
             this.setBackground(Color.black);
         }
         else {
@@ -50,9 +52,20 @@ public class GamePanel extends JPanel { // for gameThread
 
         Graphics2D g2 = (Graphics2D) g;
 
+        // for shaking effect
+        int offsetX = 0;
+        int offsetY = 0;
+
         // draw next tetorimino frame
         int x = right_x + 100;
         int y = bottom_y - 200;
+
+        if (pm.getShakeCounter() > 0) {
+            offsetX = (int)(Math.random() * 4 - 2); // -2, -1, 0, 1
+            offsetY = (int)(Math.random() * 4 - 2);
+            pm.setShakeCounter(pm.getShakeCounter() - 1);
+        }
+        g2.translate(offsetX, offsetY);
 
         g2.setColor(Color.WHITE);
         g2.setStroke(new BasicStroke(4f));
@@ -86,6 +99,12 @@ public class GamePanel extends JPanel { // for gameThread
             System.out.println("Can't find the tetromino");
         }
         // draw clear line effect
-        pm.setEffectCounterOn(dle.deleteEffect(left_x, PlayArea.WIDTH, pm.isEffectCounterOn(), pm.getEffectY(), g2));
+        if (pm.isEffectCounterOn()) {
+            boolean stillRunning = dle.deleteEffect(left_x, PlayArea.WIDTH, true, pm.getEffectY(), g2);
+            if (!stillRunning) {
+                pm.finalizeDelete();
+            }
+        }
+        g2.translate(-offsetX, -offsetY);
     }
 }
