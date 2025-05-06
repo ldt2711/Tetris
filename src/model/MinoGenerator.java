@@ -1,13 +1,11 @@
 package model;
 
 import model.mino.*;
-import view.GamePanel;
 import view.PlayArea;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class MinoGenerator {
     Mino currentMino;
@@ -21,11 +19,11 @@ public class MinoGenerator {
     List<Mino> minoBag = new ArrayList<>(); // random 7-bag algorithm
 
     public MinoGenerator() {
-        MINO_START_X = GamePanel.left_x + (PlayArea.WIDTH/2) - Block.SIZE;
-        MINO_START_Y = GamePanel.top_y + Block.SIZE;
+        MINO_START_X = PlayArea.left_x + (PlayArea.WIDTH/2) - Block.SIZE;
+        MINO_START_Y = PlayArea.top_y + Block.SIZE;
 
-        NEXT_MINO_X = GamePanel.right_x + 180;
-        NEXT_MINO_Y = GamePanel.top_y + 510;
+        NEXT_MINO_X = PlayArea.right_x + 180;
+        NEXT_MINO_Y = PlayArea.top_y + 510;
         currentMino = pickMino();
         currentMino.setXY(MINO_START_X, MINO_START_Y);
         nextMino = pickMino();

@@ -10,11 +10,6 @@ public class GamePanel extends JPanel { // for gameThread
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
 
-    public static int left_x;
-    public static int right_x;
-    public static int top_y;
-    public static int bottom_y;
-
     PlayManager pm;
     PlayArea pa;
     DrawState ds = new DrawState();
@@ -62,8 +57,8 @@ public class GamePanel extends JPanel { // for gameThread
         int offsetY = 0;
 
         // draw next tetorimino frame
-        int x = right_x + 100;
-        int y = bottom_y - 200;
+        int x = PlayArea.right_x + 100;
+        int y = PlayArea.bottom_y - 200;
 
         if (pm.getShakeCounter() > 0) {
             offsetX = (int)(Math.random() * 4 - 2); // -2, -1, 0, 1
@@ -81,16 +76,16 @@ public class GamePanel extends JPanel { // for gameThread
         g2.drawString("NEXT", x + 75, y + 50);
 
         // draw score frame
-        g2.drawRect(x, top_y, 250, 300);
+        g2.drawRect(x, PlayArea.top_y, 250, 300);
         x += 40;
-        y = top_y + 90;
+        y = PlayArea.top_y + 90;
         g2.drawString("LEVEL: " + pm.getLevel(), x, y); y += 70;
         g2.drawString("LINES: " + pm.getLines(), x, y); y += 70;
         g2.drawString("SCORES: " + pm.getScore(), x, y);
 
         // draw the game title
         x = 75;
-        y = top_y + 320;
+        y = PlayArea.top_y + 320;
         g2.setColor(Color.white);
         g2.setFont(new Font("Monospaced", Font.BOLD, 60));
         g2.drawString("Tetris", x, y);
@@ -105,7 +100,7 @@ public class GamePanel extends JPanel { // for gameThread
         }
         // draw clear line effect
         if (pm.isEffectCounterOn()) {
-            boolean stillRunning = dle.deleteEffect(left_x, PlayArea.WIDTH, true, pm.getEffectY(), g2);
+            boolean stillRunning = dle.deleteEffect(PlayArea.left_x, PlayArea.WIDTH, true, pm.getEffectY(), g2);
             if (!stillRunning) {
                 pm.finalizeDelete();
             }

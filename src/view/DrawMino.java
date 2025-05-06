@@ -19,7 +19,7 @@ public class DrawMino {
         g2.setColor(new Color(m.getB()[0].getC().getRed(), m.getB()[0].getC().getGreen(), m.getB()[0].getC().getBlue()));
         g2.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         for (Block gb : m.getGhostB()) {
-            if (gb.getCorX() >= GamePanel.left_x && gb.getCorY() >= 0) {
+            if (gb.getCorX() >= PlayArea.left_x && gb.getCorY() >= 0) {
                 g2.drawRect(gb.getCorX() + margin, gb.getCorY() + margin, Block.SIZE - (margin * 2), Block.SIZE - (margin * 2));
             }
         }

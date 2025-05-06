@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class DustParticle {
     double x, y;
-    double vx, vy;
-    int life = 30;
+    double vx, vy; // velocity of dust particles
+    int life = 30; // lifespan
 
     public DustParticle(int x, int y, double vx, double vy) {
         this.x = x;

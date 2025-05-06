@@ -3,7 +3,7 @@ package controller;
 import model.GameState;
 import model.mino.Block;
 import model.mino.Mino;
-import view.GamePanel;
+import view.PlayArea;
 
 public class CollisionManager {
 
@@ -20,21 +20,21 @@ public class CollisionManager {
         // check frame collision
         // left wall
         for (Block block : mino.getB()) {
-            if (block.getCorX() == GamePanel.left_x) {
+            if (block.getCorX() == PlayArea.left_x) {
                 leftCollision = true;
                 break;
             }
         }
         // right wall
         for (Block block : mino.getB()) {
-            if (block.getCorX() + Block.SIZE == GamePanel.right_x) {
+            if (block.getCorX() + Block.SIZE == PlayArea.right_x) {
                 rightCollision = true;
                 break;
             }
         }
         // bottom floor
         for (Block block : mino.getB()) {
-            if (block.getCorY() + Block.SIZE == GamePanel.bottom_y) {
+            if (block.getCorY() + Block.SIZE == PlayArea.bottom_y) {
                 bottomCollision = true;
                 break;
             }
@@ -51,19 +51,19 @@ public class CollisionManager {
         // check frame collision use tempB because it stores the rotation values
         // left wall
         for (Block block : mino.getTempB()) {
-            if (block.getCorX() < GamePanel.left_x) {
+            if (block.getCorX() < PlayArea.left_x) {
                 leftCollision = true;
             }
         }
         // right wall
         for (Block block : mino.getTempB()) {
-            if (block.getCorX() + Block.SIZE > GamePanel.right_x) {
+            if (block.getCorX() + Block.SIZE > PlayArea.right_x) {
                 rightCollision = true;
             }
         }
         // bottom floor
         for (Block block : mino.getTempB()) {
-            if (block.getCorY() + Block.SIZE > GamePanel.bottom_y) {
+            if (block.getCorY() + Block.SIZE > PlayArea.bottom_y) {
                 bottomCollision = true;
             }
         }

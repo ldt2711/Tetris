@@ -4,7 +4,7 @@ import model.GameState;
 import model.MinoGenerator;
 import model.mino.Block;
 import view.DustParticle;
-import view.GamePanel;
+import view.PlayArea;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,10 +70,6 @@ public class PlayManager {
         return sm;
     }
 
-    public void setEffectCounterOn(boolean effectCounterOn) {
-        this.effectCounterOn = effectCounterOn;
-    }
-
     public void setShakeCounter(int shakeCounter) {
         this.shakeCounter = shakeCounter;
     }
@@ -112,11 +108,10 @@ public class PlayManager {
     }
 
     public void checkDelete() {
-        int x = GamePanel.left_x;
-        int y = GamePanel.top_y;
+        int y = PlayArea.top_y;
         int blockCount = 0;
 
-        while (y < GamePanel.bottom_y) {
+        while (y < PlayArea.bottom_y) {
             for (Block item: GameState.staticBlocks) {
                 if (y == item.getCorY()) {
                     // increase the count if there is a static block
@@ -126,14 +121,13 @@ public class PlayManager {
 
             // stop condition
 
-                // if the count equal 12 that means current y line is filled with blocks so we can delete them
-                if (blockCount == 12) {
-                    effectY.add(y); // use array because can delete many lines
-
-                }
-                // reset the count when go to the next row
-                blockCount = 0;
-                y += Block.SIZE;
+            // if the count equal 12 that means current y line is filled with blocks so we can delete them
+            if (blockCount == 12) {
+                effectY.add(y); // use array because can delete many lines
+            }
+            // reset the count when go to the next row
+            blockCount = 0;
+            y += Block.SIZE;
             if (!effectY.isEmpty()) {
                 effectCounterOn = true;
             }
@@ -169,6 +163,7 @@ public class PlayManager {
         // increase drop speed when the score hits a certain number
         // max speed is 1
         if (sm.gs.getLines() / 10 > sm.gs.getLevel() - 1 && dropInterval > 1) { // increase the level when 10 lines are deleted
+            System.out.println("drop play: " + dropInterval);
             sm.gs.setLevel(sm.gs.getLevel() + 1);
             if (dropInterval > 10) { // dropInterval start is 60 = 60 frames
                 dropInterval -= 10;

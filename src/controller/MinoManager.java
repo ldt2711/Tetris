@@ -5,6 +5,7 @@ import model.MinoGenerator;
 import model.mino.Block;
 import model.mino.Mino;
 import view.GamePanel;
+import view.PlayArea;
 
 public class MinoManager {
 
@@ -75,15 +76,17 @@ public class MinoManager {
         }
         else {
             autoDropCounter++; // the counter increase every frame until it equals dropInterval
-            if (autoDropCounter == PlayManager.dropInterval) {
+            System.out.println("auto before: " + autoDropCounter);
+            if (autoDropCounter >= PlayManager.dropInterval) {
+                System.out.println("auto after: " + autoDropCounter);
                 m.getB()[0].setY(m.getB()[0].getCorY() + Block.SIZE);
                 m.getB()[1].setY(m.getB()[1].getCorY() + Block.SIZE);
                 m.getB()[2].setY(m.getB()[2].getCorY() + Block.SIZE);
                 m.getB()[3].setY(m.getB()[3].getCorY() + Block.SIZE);
                 autoDropCounter = 0;
+                System.out.println("drop mino: " + PlayManager.dropInterval);
             }
         }
-
         if (m.deactivating) {
             deactivating(m);
         }
@@ -116,7 +119,7 @@ public class MinoManager {
             boolean isHit = false;
             for (Block gb: m.getGhostB()) {
                 int nextY = gb.getCorY() + Block.SIZE;
-                if (nextY == GamePanel.bottom_y) {
+                if (nextY == PlayArea.bottom_y) {
                     isHit = true;
                     break;
                 }
