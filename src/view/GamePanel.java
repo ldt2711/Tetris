@@ -20,6 +20,7 @@ public class GamePanel extends JPanel { // for gameThread
     DrawState ds = new DrawState();
     DeleteLineEffect dle = new DeleteLineEffect();
 
+
     public GamePanel() {
         // Game panel settings
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -39,6 +40,10 @@ public class GamePanel extends JPanel { // for gameThread
         if(!KeyHandler.pausePressed && !pm.gameOver) {
             if (!pm.isEffectCounterOn()) {
                 pm.update();
+                pm.getDustParticles().removeIf(DustParticle::isDead);
+                for (DustParticle d : pm.getDustParticles()) {
+                    d.update();
+                }
             }
             this.setBackground(Color.black);
         }
@@ -106,5 +111,11 @@ public class GamePanel extends JPanel { // for gameThread
             }
         }
         g2.translate(-offsetX, -offsetY);
+
+        // Draw dust particles
+        for (DustParticle d : pm.getDustParticles()) {
+            d.render(g2);
+        }
+
     }
 }

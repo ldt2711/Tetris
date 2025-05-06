@@ -3,9 +3,12 @@ package controller;
 import model.GameState;
 import model.MinoGenerator;
 import model.mino.Block;
+import view.DustParticle;
 import view.GamePanel;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class PlayManager {
     // others
@@ -16,11 +19,12 @@ public class PlayManager {
     private boolean effectCounterOn;
     private int shakeCounter = 0;
     ArrayList<Integer> effectY = new ArrayList<>();
+    List<DustParticle> dustParticles = new ArrayList<>();
     // model
     MinoGenerator mg;
     // controller
     ScoreManager sm = new ScoreManager();
-    MinoManager mm = new MinoManager();
+    MinoManager mm = new MinoManager(this);
 
     public PlayManager() {
         mg = new MinoGenerator();
@@ -52,6 +56,10 @@ public class PlayManager {
 
     public ArrayList<Integer> getEffectY() {
         return effectY;
+    }
+
+    public List<DustParticle> getDustParticles() {
+        return dustParticles;
     }
 
     public MinoGenerator getMg() {
@@ -172,4 +180,18 @@ public class PlayManager {
         effectY.clear();
         effectCounterOn = false;
     }
+
+    public void createDust(int x, int y) {
+        Random rand = new Random();
+        for (int i = 0; i < 4; i++) {
+            double angle = rand.nextBoolean() ? Math.toRadians(rand.nextInt(30) + 30)  // left side
+                    : Math.toRadians(rand.nextInt(30) - 60); // right side
+            double speed = rand.nextDouble() * 3 + 1; // tốc độ từ 1 đến 4
+            double vx = Math.cos(angle) * speed;
+            double vy = -Math.abs(Math.sin(angle) * speed); // bay lên trên nhẹ
+
+            dustParticles.add(new DustParticle(x, y, vx, vy));
+        }
+    }
+
 }

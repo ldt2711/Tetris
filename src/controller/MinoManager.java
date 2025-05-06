@@ -1,6 +1,7 @@
 package controller;
 
 import model.GameState;
+import model.MinoGenerator;
 import model.mino.Block;
 import model.mino.Mino;
 import view.GamePanel;
@@ -12,6 +13,11 @@ public class MinoManager {
 
     CollisionManager cm = new CollisionManager();
     MovementManager mm = new MovementManager();
+    PlayManager pm;
+
+    public MinoManager(PlayManager pm) {
+        this.pm = pm;
+    }
 
     public void updateXY(int direction, Mino m) {
         cm.checkRotationCollision(m);
@@ -30,9 +36,6 @@ public class MinoManager {
     }
 
     public void update(Mino m, ScoreManager sm) {
-        if (m.deactivating) {
-            deactivating(m);
-        }
 
         // move the mino
         // change direction
@@ -60,6 +63,10 @@ public class MinoManager {
         // hard drop
         if(mm.hardDrop(m, cm, sm)) {
             m.active = false;
+            // dust effect
+            for (Block b : m.getB()) {
+                pm.createDust(b.getCorX(), b.getCorY() + Block.SIZE);
+            }
         }
 
         // stop the tetromino when it hits the bottom floor
@@ -75,6 +82,10 @@ public class MinoManager {
                 m.getB()[3].setY(m.getB()[3].getCorY() + Block.SIZE);
                 autoDropCounter = 0;
             }
+        }
+
+        if (m.deactivating) {
+            deactivating(m);
         }
     }
 
