@@ -163,7 +163,6 @@ public class PlayManager {
         // increase drop speed when the score hits a certain number
         // max speed is 1
         if (sm.gs.getLines() / 10 > sm.gs.getLevel() - 1 && dropInterval > 1) { // increase the level when 10 lines are deleted
-            System.out.println("drop play: " + dropInterval);
             sm.gs.setLevel(sm.gs.getLevel() + 1);
             if (dropInterval > 10) { // dropInterval start is 60 = 60 frames
                 dropInterval -= 10;
