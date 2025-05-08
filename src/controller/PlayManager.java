@@ -120,7 +120,6 @@ public class PlayManager {
             }
 
             // stop condition
-
             // if the count equal 12 that means current y line is filled with blocks so we can delete them
             if (blockCount == 12) {
                 effectY.add(y); // use array because can delete many lines
@@ -154,6 +153,15 @@ public class PlayManager {
                 }
             }
             lineCount++;
+        }
+
+        // sound effect
+        if (lineCount == 1) {
+            SoundPlayer.playSound("lineclear.wav");
+        } else if (lineCount == 2) {
+            SoundPlayer.playSound("lineclear_double.wav");
+        } else if (lineCount > 2) {
+            SoundPlayer.playSound("lineclear_tetris.wav");
         }
 
         sm.gs.setLines(sm.gs.getLines() + lineCount); // increase when delete a line

@@ -4,6 +4,7 @@ import model.mino.Block;
 import model.mino.Mino;
 
 public class MovementManager {
+
     public boolean changeDirection(Mino m) {
         if(KeyHandler.upPressed) {
             switch (m.getDirection()) {
@@ -38,7 +39,7 @@ public class MovementManager {
         return false;
     }
 
-    public void moveRight(Mino m, CollisionManager cm) {
+    public boolean moveRight(Mino m, CollisionManager cm) {
         if(KeyHandler.rightPressed) {
             if (!cm.rightCollision) {
                 m.getB()[0].setX(m.getB()[0].getCorX() + Block.SIZE);
@@ -47,10 +48,12 @@ public class MovementManager {
                 m.getB()[3].setX(m.getB()[3].getCorX() + Block.SIZE);
             }
             KeyHandler.rightPressed = false;
+            return true;
         }
+        return false;
     }
 
-    public void moveLeft(Mino m, CollisionManager cm) {
+    public boolean moveLeft(Mino m, CollisionManager cm) {
         if(KeyHandler.leftPressed) {
             if (!cm.leftCollision) {
                 m.getB()[0].setX(m.getB()[0].getCorX() - Block.SIZE);
@@ -59,7 +62,9 @@ public class MovementManager {
                 m.getB()[3].setX(m.getB()[3].getCorX() - Block.SIZE);
             }
             KeyHandler.leftPressed = false;
+            return true;
         }
+        return false;
     }
 
     public boolean hardDrop(Mino m, CollisionManager cm, ScoreManager sm) {

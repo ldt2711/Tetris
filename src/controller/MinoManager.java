@@ -1,10 +1,8 @@
 package controller;
 
 import model.GameState;
-import model.MinoGenerator;
 import model.mino.Block;
 import model.mino.Mino;
-import view.GamePanel;
 import view.PlayArea;
 
 public class MinoManager {
@@ -43,6 +41,8 @@ public class MinoManager {
         if(mm.changeDirection(m)) {
             m.setDirection((m.getDirection() % 4) + 1);
             updateXY(m.getDirection(), m);
+            // sound effect
+            SoundPlayer.playSound("rotate.wav");
         }
 
         cm.checkMovementCollision(m);
@@ -52,18 +52,34 @@ public class MinoManager {
             if(mm.softDrop(m)) {
                 // reset autoDropCounter when move down 1 block
                 autoDropCounter = 0;
+                // sound effect
+                SoundPlayer.playSound("softdrop.wav");
             }
         }
-        // move right
-        mm.moveRight(m, cm);
-        // move left
-        mm.moveLeft(m, cm);
+        // move right and left
+        if (cm.rightCollision && KeyHandler.rightPressed) {
+            SoundPlayer.playSound("alert.wav");
+            KeyHandler.rightPressed = false;
+        } else if (mm.moveRight(m, cm)) {
+            SoundPlayer.playSound("move.wav");
+        }
+
+        if (cm.leftCollision && KeyHandler.leftPressed) {
+            SoundPlayer.playSound("alert.wav");
+            KeyHandler.leftPressed = false;
+        } else if (mm.moveLeft(m, cm)) {
+            SoundPlayer.playSound("move.wav");
+        }
 
        updateGhostBlock(m);
 
         // hard drop
         if(mm.hardDrop(m, cm, sm)) {
             m.active = false;
+            // shake effect
+            pm.setShakeCounter(5);
+            // sound effect
+            SoundPlayer.playSound("harddrop.wav");
             // dust effect
             for (Block b : m.getB()) {
                 pm.createDust(b.getCorX(), b.getCorY() + Block.SIZE);
