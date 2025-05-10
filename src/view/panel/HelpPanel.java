@@ -14,7 +14,7 @@ public class HelpPanel extends JPanel {
     private JLabel label;
     private MainWindow mainMenu;
 
-    public HelpPanel(MainWindow mainMenu) {
+    public HelpPanel(MainWindow mainMenu, int i) {
         this.mainMenu = mainMenu;
 
         this.setPreferredSize(new Dimension(GamePanel.WIDTH, GamePanel.HEIGHT));
@@ -72,7 +72,13 @@ public class HelpPanel extends JPanel {
         doneButton = new SelectButton("done");
         doneButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         doneButton.setMaximumSize(new Dimension(100, 70));
-        doneButton.addActionListener(e -> mainMenu.showMainMenu());
+        doneButton.addActionListener(e -> {
+            if (i == 0) {
+                mainMenu.showMainMenu();
+            } else {
+                mainMenu.showPausePanel();
+            }
+        });
         content.add(doneButton);
         content.add(Box.createVerticalStrut(20));
 
@@ -82,7 +88,7 @@ public class HelpPanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g.create();
-        BasicUI.drawGame(g2, 0, 0, 0, this);
+        BasicUI.drawGame(g2, mainMenu.getGamePanel().pm.getLevel(), mainMenu.getGamePanel().pm.getScore(), mainMenu.getGamePanel().pm.getLines(), this);
     }
 
     private JLabel createKey(String str) {

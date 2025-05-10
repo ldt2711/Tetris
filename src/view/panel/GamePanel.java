@@ -1,5 +1,6 @@
 package view.panel;
 
+import controller.ConfigManager;
 import controller.KeyHandler;
 import controller.PlayManager;
 import model.GameState;
@@ -19,18 +20,19 @@ import java.util.Objects;
 public class GamePanel extends JPanel { // for gameThread
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
-    private static Image pauseIcon;
     private static Image playIcon;
-    private static final Rectangle playButtonBounds = new Rectangle(180, PlayArea.top_y + 350, 50, 50);
+    public static final Rectangle playButtonBounds = new Rectangle(180, PlayArea.top_y + 350, 50, 50);
 
     PlayManager pm;
     DrawState ds = new DrawState();
     DeleteLineEffect dle = new DeleteLineEffect();
+    ConfigManager cm;
     private MainWindow mainMenu;
 
     public GamePanel(MainWindow mainMenu) {
         this.mainMenu = mainMenu;
         GameState.staticBlocks.clear();
+        this.cm = new ConfigManager();
 
         // Game panel settings
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -38,14 +40,13 @@ public class GamePanel extends JPanel { // for gameThread
         this.setLayout(null);
 
         // implement key listener
-        this.addKeyListener(new KeyHandler());
+        this.addKeyListener(new KeyHandler(cm));
         this.setFocusable(true);
         this.requestFocusInWindow();
         
         BasicUI.initResources();
 
         ClassLoader cl = BasicUI.class.getClassLoader();
-        pauseIcon = new ImageIcon(Objects.requireNonNull(cl.getResource("image/icon/pause.png"))).getImage();
         playIcon = new ImageIcon(Objects.requireNonNull(cl.getResource("image/icon/play.png"))).getImage();
 
         addMouseListener(new MouseAdapter() {
@@ -65,7 +66,7 @@ public class GamePanel extends JPanel { // for gameThread
     }
 
 
-    private void togglePlay() {KeyHandler.pausePressed = !KeyHandler.pausePressed;}
+    public void togglePlay() {KeyHandler.pausePressed = !KeyHandler.pausePressed;}
 
     public void update() throws SQLException { // score, position,...
         // update only when the game is not paused
@@ -81,7 +82,7 @@ public class GamePanel extends JPanel { // for gameThread
         } else if (pm.gameOver) {
             mainMenu.showInsertNamePanel();
         } else {
-            this.setBackground(new Color(23, 23, 23, 20));
+            mainMenu.showPausePanel();
         }
     }
 
@@ -103,7 +104,7 @@ public class GamePanel extends JPanel { // for gameThread
 
         BasicUI.drawGame(g2, pm.getLevel(), pm.getScore(), pm.getLines(), this);
 
-        Image iconToDraw = KeyHandler.pausePressed ? pauseIcon : playIcon;
+        Image iconToDraw = playIcon;
         g2.drawImage(iconToDraw, playButtonBounds.x, playButtonBounds.y,
                         playButtonBounds.width, playButtonBounds.height, this);
         // draw mino

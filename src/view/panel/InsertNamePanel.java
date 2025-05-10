@@ -9,6 +9,8 @@ import view.SelectButton;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 
 public class InsertNamePanel extends JPanel {
@@ -27,6 +29,15 @@ public class InsertNamePanel extends JPanel {
         this.setLayout(null);
 
         BasicUI.initResources();
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (BasicUI.soundButtonBounds.contains(e.getPoint())) {
+                    BasicUI.toggleMute();
+                    repaint();
+                }
+            }
+        });
 
         JPanel insertNameBox = new JPanel();
         insertNameBox.setBounds(PlayArea.left_x + 40, PlayArea.top_y + 125, PlayArea.WIDTH - 80, PlayArea.HEIGHT - 250);

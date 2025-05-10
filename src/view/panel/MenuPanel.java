@@ -74,14 +74,14 @@ public class MenuPanel extends JPanel {
         Image scaled = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         optionsButton = new SelectButton(new ImageIcon(scaled));
         optionsButton.setPreferredSize(new Dimension(70, 70));
-        optionsButton.addActionListener(e -> mainApp.showOptionsPanel());
+        optionsButton.addActionListener(e -> mainApp.showOptionsPanel(0));
         bottomPanel.add(optionsButton);
 
         // Help button
         helpButton = new SelectButton("?");
         helpButton.setFont(new Font("Arial Black", Font.BOLD, 40));
         helpButton.setPreferredSize(new Dimension(70, 70));
-        helpButton.addActionListener(e -> mainApp.showHelpPanel());
+        helpButton.addActionListener(e -> mainApp.showHelpPanel(0));
         bottomPanel.add(helpButton);
 
         mainMenu.add(Box.createVerticalStrut(50));

@@ -1,6 +1,7 @@
 package view;
 
 import controller.GameLoop;
+import controller.KeyHandler;
 import view.panel.*;
 
 import javax.swing.*;
@@ -18,6 +19,10 @@ public class MainWindow extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    public GamePanel getGamePanel() {
+        return gamePanel;
     }
 
     public void showMainMenu() {
@@ -45,8 +50,22 @@ public class MainWindow extends JFrame {
         }
     }
 
-    public void showOptionsPanel() {
-        setContentPane(new OptionsPanel(this));
+    public void continueGame() {
+        setContentPane(gamePanel);
+        revalidate();
+        repaint();
+        gamePanel.requestFocusInWindow();
+
+        gameLoop = new GameLoop(gamePanel);
+        try {
+            gameLoop.startGame();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showOptionsPanel(int panel) {
+        setContentPane(new OptionsPanel(this, panel));
         revalidate();
         repaint();
     }
@@ -62,15 +81,16 @@ public class MainWindow extends JFrame {
         repaint();
     }
 
-    public void showHelpPanel() {
-        setContentPane(new HelpPanel(this));
+    public void showHelpPanel(int i) {
+        setContentPane(new HelpPanel(this, i));
         revalidate();
         repaint();
     }
 
-//    public void showHighScorePanel() {
-//        setContentPane(new HighScorePanel(this)); // nếu có HighScorePanel riêng
-//        revalidate();
-//        repaint();
-//    }
+    public void showPausePanel() {
+        gameLoop.stopGame();
+        setContentPane(new PausePanel(this, gamePanel));
+        revalidate();
+        repaint();
+    }
 }

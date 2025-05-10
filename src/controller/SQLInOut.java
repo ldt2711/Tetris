@@ -14,7 +14,7 @@ public class SQLInOut {
     public static ArrayList<GameState> getTopScore(int limit) throws SQLException{
         ArrayList<GameState> scores = new ArrayList<>();
 
-        String sql = "SELECT TOP (?) player_name, score FROM HighScore ORDER BY score DESC";
+        String sql = "SELECT TOP (?) player_name, score FROM HighScore ORDER BY score ASC";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement pstm = connection.prepareStatement(sql)) {
             pstm.setInt(1, limit);
