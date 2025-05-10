@@ -1,22 +1,37 @@
-package view;
+package view.panel;
 
 import controller.KeyHandler;
 import controller.PlayManager;
+import model.GameState;
+import view.MainWindow;
+import view.effect.DeleteLineEffect;
+import view.DrawState;
+import view.effect.DustParticle;
+import view.PlayArea;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.Objects;
 
 public class GamePanel extends JPanel { // for gameThread
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
+    private static Image pauseIcon;
+    private static Image playIcon;
+    private static final Rectangle playButtonBounds = new Rectangle(180, PlayArea.top_y + 350, 50, 50);
 
     PlayManager pm;
-    PlayArea pa;
     DrawState ds = new DrawState();
     DeleteLineEffect dle = new DeleteLineEffect();
+    private MainWindow mainMenu;
 
+    public GamePanel(MainWindow mainMenu) {
+        this.mainMenu = mainMenu;
+        GameState.staticBlocks.clear();
 
-    public GamePanel() {
         // Game panel settings
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setBackground(Color.black);
@@ -25,12 +40,34 @@ public class GamePanel extends JPanel { // for gameThread
         // implement key listener
         this.addKeyListener(new KeyHandler());
         this.setFocusable(true);
+        this.requestFocusInWindow();
+        
+        BasicUI.initResources();
 
-        pa = new PlayArea();
+        ClassLoader cl = BasicUI.class.getClassLoader();
+        pauseIcon = new ImageIcon(Objects.requireNonNull(cl.getResource("image/icon/pause.png"))).getImage();
+        playIcon = new ImageIcon(Objects.requireNonNull(cl.getResource("image/icon/play.png"))).getImage();
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (BasicUI.soundButtonBounds.contains(e.getPoint())) {
+                    BasicUI.toggleMute();
+                    repaint();
+                } else if (playButtonBounds.contains(e.getPoint())) {
+                    togglePlay();
+                    repaint();
+                }
+            }
+        });
+
         pm = new PlayManager();
     }
 
-    public void update() { // score, position,...
+
+    private void togglePlay() {KeyHandler.pausePressed = !KeyHandler.pausePressed;}
+
+    public void update() throws SQLException { // score, position,...
         // update only when the game is not paused
         if(!KeyHandler.pausePressed && !pm.gameOver) {
             if (!pm.isEffectCounterOn()) {
@@ -41,8 +78,9 @@ public class GamePanel extends JPanel { // for gameThread
                 }
             }
             this.setBackground(Color.black);
-        }
-        else {
+        } else if (pm.gameOver) {
+            mainMenu.showInsertNamePanel();
+        } else {
             this.setBackground(new Color(23, 23, 23, 20));
         }
     }
@@ -56,10 +94,6 @@ public class GamePanel extends JPanel { // for gameThread
         int offsetX = 0;
         int offsetY = 0;
 
-        // draw next tetorimino frame
-        int x = PlayArea.right_x + 100;
-        int y = PlayArea.bottom_y - 200;
-
         if (pm.getShakeCounter() > 0) {
             offsetX = (int)(Math.random() * 4 - 2); // -2, -1, 0, 1
             offsetY = (int)(Math.random() * 4 - 2);
@@ -67,31 +101,11 @@ public class GamePanel extends JPanel { // for gameThread
         }
         g2.translate(offsetX, offsetY);
 
-        g2.setColor(Color.WHITE);
-        g2.setStroke(new BasicStroke(4f));
+        BasicUI.drawGame(g2, pm.getLevel(), pm.getScore(), pm.getLines(), this);
 
-        g2.drawRect(x, y, 200, 200);
-        g2.setFont(new Font("Monospaced", Font.BOLD, 24));
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF); // anti-aliasing for the text
-        g2.drawString("NEXT", x + 75, y + 50);
-
-        // draw score frame
-        g2.drawRect(x, PlayArea.top_y, 250, 300);
-        x += 40;
-        y = PlayArea.top_y + 90;
-        g2.drawString("LEVEL: " + pm.getLevel(), x, y); y += 70;
-        g2.drawString("LINES: " + pm.getLines(), x, y); y += 70;
-        g2.drawString("SCORES: " + pm.getScore(), x, y);
-
-        // draw the game title
-        x = 75;
-        y = PlayArea.top_y + 320;
-        g2.setColor(Color.white);
-        g2.setFont(new Font("Monospaced", Font.BOLD, 60));
-        g2.drawString("Tetris", x, y);
-
-        // draw play area
-        pa.draw(g2);
+        Image iconToDraw = KeyHandler.pausePressed ? pauseIcon : playIcon;
+        g2.drawImage(iconToDraw, playButtonBounds.x, playButtonBounds.y,
+                        playButtonBounds.width, playButtonBounds.height, this);
         // draw mino
         try {
             ds.draw(g2, pm.getMg());
@@ -108,8 +122,8 @@ public class GamePanel extends JPanel { // for gameThread
         g2.translate(-offsetX, -offsetY);
 
         // Draw dust particles
-        for (DustParticle d : pm.getDustParticles()) {
-            d.render(g2);
+        for (int i = pm.getDustParticles().size() - 1; i >= 0; i--) {
+            pm.getDustParticles().get(i).render(g2);
         }
 
     }

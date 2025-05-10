@@ -1,4 +1,4 @@
-package view;
+package view.effect;
 
 import java.awt.*;
 

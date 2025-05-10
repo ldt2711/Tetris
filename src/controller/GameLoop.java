@@ -1,6 +1,8 @@
 package controller;
 
-import view.GamePanel;
+import view.panel.GamePanel;
+
+import java.sql.SQLException;
 
 public class GameLoop implements Runnable{ // for game thread
     final int FPS = 60;
@@ -14,6 +16,10 @@ public class GameLoop implements Runnable{ // for game thread
     public void startGame() {
         gameThread = new Thread(this);
         gameThread.start(); // start the thread will call the run method
+    }
+
+    public void stopGame() {
+        gameThread = null;
     }
 
     @Override
@@ -31,8 +37,12 @@ public class GameLoop implements Runnable{ // for game thread
             lastTime = currentTime;
 
             if (delta >= 1) {
-                gp.update();
-                gp.repaint(); // call the paintComponent method
+                try {
+                    gp.update();
+                    gp.repaint();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 delta--;
             }
         }

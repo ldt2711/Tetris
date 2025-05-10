@@ -3,7 +3,7 @@ package controller;
 import model.GameState;
 import model.MinoGenerator;
 import model.mino.Block;
-import view.DustParticle;
+import view.effect.DustParticle;
 import view.PlayArea;
 
 import java.util.ArrayList;
@@ -40,10 +40,6 @@ public class PlayManager {
 
     public int getLevel() {
         return sm.gs.getLevel();
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
     }
 
     public boolean isEffectCounterOn() {
