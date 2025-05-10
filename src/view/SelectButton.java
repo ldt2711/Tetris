@@ -69,7 +69,7 @@ public class SelectButton extends JButton {
         Graphics2D g2 = (Graphics2D) g.create();
 
         if (getModel().isPressed() || hover) {
-            g2.setColor(Color.white);
+            g2.setColor(new Color(192, 192, 192));
             g2.fillRect(0, 0, getWidth(), getHeight());
             setForeground(Color.black);
         } else {

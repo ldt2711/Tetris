@@ -1,10 +1,7 @@
 package view;
 
 import controller.GameLoop;
-import view.panel.GamePanel;
-import view.panel.InsertNamePanel;
-import view.panel.MenuPanel;
-import view.panel.OptionsPanel;
+import view.panel.*;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -65,12 +62,12 @@ public class MainWindow extends JFrame {
         repaint();
     }
 
-//    public void showHelpPanel() {
-//        setContentPane(new HelpPanel(this));
-//        revalidate();
-//        repaint();
-//    }
-//
+    public void showHelpPanel() {
+        setContentPane(new HelpPanel(this));
+        revalidate();
+        repaint();
+    }
+
 //    public void showHighScorePanel() {
 //        setContentPane(new HighScorePanel(this)); // nếu có HighScorePanel riêng
 //        revalidate();

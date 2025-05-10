@@ -81,7 +81,7 @@ public class MenuPanel extends JPanel {
         helpButton = new SelectButton("?");
         helpButton.setFont(new Font("Arial Black", Font.BOLD, 40));
         helpButton.setPreferredSize(new Dimension(70, 70));
-        // helpButton.addActionListener(e -> mainApp.showHelpPanel());
+        helpButton.addActionListener(e -> mainApp.showHelpPanel());
         bottomPanel.add(helpButton);
 
         mainMenu.add(Box.createVerticalStrut(50));

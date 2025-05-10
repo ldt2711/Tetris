@@ -13,6 +13,7 @@ import java.sql.SQLException;
 
 public class InsertNamePanel extends JPanel {
     private SelectButton quitButton, submitButton;
+    private JLabel label;
     private MainWindow mainMenu;
     private JTextField nameField;
     private PlayManager playManager;
@@ -34,7 +35,7 @@ public class InsertNamePanel extends JPanel {
         insertNameBox.setBorder(BorderFactory.createLineBorder(Color.white, 3));
 
         // label
-        JLabel label = new JLabel("game over");
+        label = new JLabel("game over");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         label.setForeground(Color.WHITE);
         label.setFont(new Font("Monospaced", Font.BOLD, 25));
