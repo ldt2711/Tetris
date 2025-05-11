@@ -12,7 +12,7 @@ public class SaveGame {
 
     public static void saveGame(GameState gameState) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_FILE))) {
-            oos.writeObject(GameState.staticBlocks);
+            oos.writeObject(PlayManager.staticBlocks);
             oos.writeObject(PlayManager.dropInterval);
             oos.writeObject(gameState);
         } catch (IOException e) {
@@ -22,9 +22,9 @@ public class SaveGame {
 
     public static GameState loadGame() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
-            GameState.staticBlocks = (ArrayList<Block>) ois.readObject();
+            PlayManager.staticBlocks = (ArrayList<Block>) ois.readObject();
             PlayManager.dropInterval = (int) ois.readObject();
-            System.out.println("Loaded staticBlocks size: " + GameState.staticBlocks.size());
+            System.out.println("Loaded staticBlocks size: " + PlayManager.staticBlocks.size());
             return (GameState) ois.readObject();
 
         } catch (IOException | ClassNotFoundException e) {

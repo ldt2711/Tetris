@@ -32,10 +32,10 @@ public class InsertNamePanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (BasicUI.soundButtonBounds.contains(e.getPoint())) {
-                    BasicUI.toggleMute();
-                    repaint();
-                }
+            if (BasicUI.soundButtonBounds.contains(e.getPoint())) {
+                BasicUI.toggleMute();
+                repaint();
+            }
             }
         });
 
@@ -80,7 +80,9 @@ public class InsertNamePanel extends JPanel {
         // quit button
         quitButton = new SelectButton("quit");
         quitButton.setPreferredSize(new Dimension(90, 70));
-        quitButton.addActionListener(e -> mainMenu.showMainMenu());
+        quitButton.addActionListener(e -> {
+            mainMenu.showMainMenu();
+        });
         bottomPanel.add(quitButton);
 
         insertNameBox.add(Box.createVerticalStrut(50));

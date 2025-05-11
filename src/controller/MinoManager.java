@@ -139,7 +139,7 @@ public class MinoManager {
                 }
 
                 // check static block
-                for (Block sb: GameState.staticBlocks) {
+                for (Block sb: PlayManager.staticBlocks) {
                     if (sb.getCorX() == gb.getCorX() && sb.getCorY() == nextY) {
                         isHit = true;
                         break;

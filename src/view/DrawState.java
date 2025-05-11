@@ -1,5 +1,6 @@
 package view;
 
+import controller.PlayManager;
 import model.GameState;
 import model.MinoGenerator;
 import model.mino.Block;
@@ -21,7 +22,7 @@ public class DrawState {
         dm.drawBlocks(g2, mg.getNextMino());
 
         // draw staticBlocks
-        for (Block i: GameState.staticBlocks) {
+        for (Block i: PlayManager.staticBlocks) {
             db.draw(g2, i);
         }
     }

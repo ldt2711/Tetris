@@ -5,6 +5,7 @@ import controller.KeyHandler;
 import controller.PlayManager;
 import controller.SaveGame;
 import model.GameState;
+import model.mino.Block;
 import view.MainWindow;
 import view.effect.DeleteLineEffect;
 import view.DrawState;
@@ -34,7 +35,7 @@ public class GamePanel extends JPanel { // for gameThread
         pm = new PlayManager();
 
         this.mainMenu = mainMenu;
-        GameState.staticBlocks.clear();
+        PlayManager.staticBlocks.clear();
         this.cm = new ConfigManager();
 
         // Game panel settings
@@ -70,7 +71,6 @@ public class GamePanel extends JPanel { // for gameThread
         pm = new PlayManager(gameState);
 
         this.mainMenu = mainMenu;
-        GameState.staticBlocks.clear();
         this.cm = new ConfigManager();
 
         // Game panel settings

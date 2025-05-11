@@ -14,6 +14,7 @@ public class PlayManager {
     // others
     public static int dropInterval = 60; // mino drops in every 60 frame = 1 sec
     public boolean gameOver;
+    public static ArrayList<Block> staticBlocks;// store mino when it hits the bottom floor
 
     // effect
     private boolean effectCounterOn;
@@ -28,6 +29,7 @@ public class PlayManager {
 
     public PlayManager() {
         mg = new MinoGenerator();
+        staticBlocks = new ArrayList<>();
     }
 
     public PlayManager(GameState gameState) {
@@ -83,10 +85,10 @@ public class PlayManager {
         // check if the current mino is active
         if (!mg.getCurrentMino().active) {
             // if the mino is not active, put it into staticBlocks
-            GameState.staticBlocks.add(mg.getCurrentMino().getB()[0]);
-            GameState.staticBlocks.add(mg.getCurrentMino().getB()[1]);
-            GameState.staticBlocks.add(mg.getCurrentMino().getB()[2]);
-            GameState.staticBlocks.add(mg.getCurrentMino().getB()[3]);
+            staticBlocks.add(mg.getCurrentMino().getB()[0]);
+            staticBlocks.add(mg.getCurrentMino().getB()[1]);
+            staticBlocks.add(mg.getCurrentMino().getB()[2]);
+            staticBlocks.add(mg.getCurrentMino().getB()[3]);
 
             // check if the game is over
             if (mg.getCurrentMino().getB()[0].getCorX() == mg.MINO_START_X
@@ -119,7 +121,7 @@ public class PlayManager {
         int blockCount = 0;
 
         while (y < PlayArea.bottom_y) {
-            for (Block item: GameState.staticBlocks) {
+            for (Block item: staticBlocks) {
                 if (y == item.getCorY()) {
                     // increase the count if there is a static block
                     blockCount++;
@@ -145,15 +147,15 @@ public class PlayManager {
         shakeCounter = 5;
         for (Integer y: effectY) {
             // use backward for loop to avoid some weird results from the normal for loop
-            for (int i = GameState.staticBlocks.size() - 1; i > -1; i--) {
+            for (int i = staticBlocks.size() - 1; i > -1; i--) {
                 // remove all the blocks in the current y line
-                if (GameState.staticBlocks.get(i).getCorY() == y) {
-                    GameState.staticBlocks.remove(i);
+                if (staticBlocks.get(i).getCorY() == y) {
+                    staticBlocks.remove(i);
                 }
             }
 
             // slide down blocks that are above the deleted line
-            for (Block staticBlock : GameState.staticBlocks) {
+            for (Block staticBlock : staticBlocks) {
                 // if a block is above deleted line, move it down by the block size
                 if (staticBlock.getCorY() < y) {
                     staticBlock.setY(staticBlock.getCorY() + Block.SIZE);

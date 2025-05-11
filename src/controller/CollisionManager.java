@@ -70,7 +70,7 @@ public class CollisionManager {
     }
 
     public void checkStaticBlockCollision(Mino mino) {
-        for (Block item1: GameState.staticBlocks) {
+        for (Block item1: PlayManager.staticBlocks) {
             int targetX = item1.getCorX();
             int targetY = item1.getCorY();
 

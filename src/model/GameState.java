@@ -22,8 +22,6 @@ public class GameState implements Serializable {
     Mino currentMino;
     Mino nextMino;
 
-    public static ArrayList<Block> staticBlocks = new ArrayList<>(); // store mino when it hits the bottom floor
-
     public GameState() {
     }
 
