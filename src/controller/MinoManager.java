@@ -103,6 +103,7 @@ public class MinoManager {
         if (m.deactivating) {
             deactivating(m);
         }
+
     }
 
     public void deactivating(Mino m) {

@@ -30,6 +30,14 @@ public class PlayManager {
         mg = new MinoGenerator();
     }
 
+    public PlayManager(GameState gameState) {
+        sm.gs = gameState;
+        assert sm.gs != null;
+        mg = new MinoGenerator();
+        mg.setCurrentMino(sm.gs.getCurrentMino());
+        mg.setNextMino(sm.gs.getNextMino());
+    }
+
     public int getLines() {
         return sm.gs.getLines();
     }
@@ -100,7 +108,10 @@ public class PlayManager {
         }
         else {
             mm.update(mg.getCurrentMino(), sm);
+            sm.gs.setCurrentMino(mg.getCurrentMino());
+            sm.gs.setNextMino(mg.getNextMino());
         }
+        SaveGame.saveGame(sm.gs);
     }
 
     public void checkDelete() {

@@ -1,8 +1,12 @@
 package model.mino;
 
 import java.awt.*;
+import java.io.Serial;
+import java.io.Serializable;
 
-public class Block extends Rectangle {
+public class Block extends Rectangle implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private int x, y;
     private Color c;
     public static int SIZE = 30; // block 30x30

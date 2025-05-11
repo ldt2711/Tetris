@@ -2,6 +2,7 @@ package view;
 
 import controller.GameLoop;
 import controller.KeyHandler;
+import controller.SaveGame;
 import view.panel.*;
 
 import javax.swing.*;
@@ -62,6 +63,11 @@ public class MainWindow extends JFrame {
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
+    }
+
+    public void load() {
+        gamePanel = new GamePanel(this, SaveGame.loadGame());
+        continueGame();
     }
 
     public void showOptionsPanel(int panel) {

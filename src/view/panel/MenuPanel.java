@@ -1,6 +1,7 @@
 package view.panel;
 
 import controller.SQLInOut;
+import controller.SaveGame;
 import model.GameState;
 import view.HighScoreTable;
 import view.MainWindow;
@@ -20,7 +21,6 @@ public class MenuPanel extends JPanel {
     private HighScoreTable table;
 
     public MenuPanel(MainWindow mainApp) throws SQLException {
-
         this.setPreferredSize(new Dimension(GamePanel.WIDTH, GamePanel.HEIGHT));
         this.setBackground(Color.black);
         this.setLayout(null);
@@ -54,7 +54,9 @@ public class MenuPanel extends JPanel {
         continueButton = new SelectButton("continue");
         continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         continueButton.setMaximumSize(new Dimension(250, 50));
-        continueButton.addActionListener(e -> mainApp.startNewGame());
+        continueButton.addActionListener(e -> {
+            mainApp.load();
+        });
         mainMenu.add(Box.createVerticalStrut(30));
         mainMenu.add(continueButton);
 

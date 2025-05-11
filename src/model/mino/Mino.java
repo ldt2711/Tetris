@@ -1,8 +1,10 @@
 package model.mino;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Mino implements IMino{
+public class Mino implements IMino, Serializable {
+    private static final long serialVersionUID = 1L;
     private Block[] b = new Block[4]; // every tetromino has 4 blocks
     private Block[] tempB = new Block[4]; // use when rotate and the tetromino touches the wall
     private Block[] ghostB = new Block[4]; // for ghost block

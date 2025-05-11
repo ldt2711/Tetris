@@ -3,6 +3,7 @@ package view.panel;
 import controller.ConfigManager;
 import controller.KeyHandler;
 import controller.PlayManager;
+import controller.SaveGame;
 import model.GameState;
 import view.MainWindow;
 import view.effect.DeleteLineEffect;
@@ -30,6 +31,8 @@ public class GamePanel extends JPanel { // for gameThread
     private MainWindow mainMenu;
 
     public GamePanel(MainWindow mainMenu) {
+        pm = new PlayManager();
+
         this.mainMenu = mainMenu;
         GameState.staticBlocks.clear();
         this.cm = new ConfigManager();
@@ -61,10 +64,47 @@ public class GamePanel extends JPanel { // for gameThread
                 }
             }
         });
-
-        pm = new PlayManager();
     }
 
+    public GamePanel(MainWindow mainMenu, GameState gameState) {
+        pm = new PlayManager(gameState);
+
+        this.mainMenu = mainMenu;
+        GameState.staticBlocks.clear();
+        this.cm = new ConfigManager();
+
+        // Game panel settings
+        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        this.setBackground(Color.black);
+        this.setLayout(null);
+
+        // implement key listener
+        this.addKeyListener(new KeyHandler(cm));
+        this.setFocusable(true);
+        this.requestFocusInWindow();
+
+        BasicUI.initResources();
+
+        ClassLoader cl = BasicUI.class.getClassLoader();
+        playIcon = new ImageIcon(Objects.requireNonNull(cl.getResource("image/icon/play.png"))).getImage();
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (BasicUI.soundButtonBounds.contains(e.getPoint())) {
+                    BasicUI.toggleMute();
+                    repaint();
+                } else if (playButtonBounds.contains(e.getPoint())) {
+                    togglePlay();
+                    repaint();
+                }
+            }
+        });
+    }
+
+    public PlayManager getPm() {
+        return pm;
+    }
 
     public void togglePlay() {KeyHandler.pausePressed = !KeyHandler.pausePressed;}
 
